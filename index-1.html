@@ -1,0 +1,169 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funny Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: white;
+            padding: 20px;
+            margin: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            color: #ff6347;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes flash {
+            0% { color: #ff6347; }
+            50% { color: #32cd32; }
+            100% { color: #ff6347; }
+        }
+
+        label {
+            font-size: 1.5rem;
+            animation: flash 1.5s ease-in-out infinite;
+        }
+
+        input, button {
+            font-size: 1.2rem;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+        }
+
+        button {
+            background-color: #ff6347;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #32cd32;
+        }
+
+        .hidden { 
+            display: none;
+        }
+
+        #animal_face img {
+            width: 250px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome! Please fill in the questions below:</h1>
+
+    <div id="step1">
+        <label for="name">1. Hello! Tell me your name:</label>
+        <input type="text" id="name" name="name">
+        <button onclick="checkName()">Submit</button>
+    </div>
+
+    <div id="step2" class="hidden">
+        <label for="good_deed">2. Have you done any good deeds in life? (Yes/No):</label>
+        <input type="text" id="good_deed" name="good_deed">
+        <button onclick="checkGoodDeed()">Submit</button>
+    </div>
+
+    <div id="step3" class="hidden">
+        <label for="trusted_friend">3. Who is your most trusted friend ever?</label>
+        <input type="text" id="trusted_friend" name="trusted_friend">
+        <button onclick="nextStep()">Submit</button>
+    </div>
+
+    <div id="step4" class="hidden">
+        <label for="soulmate">4. The person you love most and want as your soulmate?</label>
+        <input type="text" id="soulmate" name="soulmate">
+        <button onclick="nextStep2()">Submit</button>
+    </div>
+    
+    <div id="step5" class="hidden">
+        <label for="hated_person">5. The name of the person you hate most?</label>
+        <input type="text" id="hated_person" name="hated_person">
+        <button onclick="showPreAnimalMessage()">Submit</button>
+    </div>
+
+    <div id="pre_animal_message" class="hidden">
+        <p>Chalo, tumhe tumhari pic dikhati hu!</p>
+    </div>
+
+    <div id="step6" class="hidden">
+        <p id="animal_face"></p>
+        <button onclick="finish()">Finish</button>
+    </div>
+
+    <div id="final_message" class="hidden">
+        <p>Chalo thik hai, Ram Ram!</p>
+    </div>
+
+    <script>
+        let correctNames = ["Priya", "Tarun", "Manav", "Daisy", "Lavanya", "Archana", "Payal"];
+        let userName = "";
+        let animalImages = {
+                "Priya": "https://images.unsplash.com/photo-1536514900905-0d5511b9d489?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "Payal": "https://images.unsplash.com/photo-1591382386627-349b692688ff?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "Daisy": "https://images.unsplash.com/photo-1604076150017-48b528308aa3?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "Tarun": "https://images.unsplash.com/photo-1570288685369-f7305163d0e3?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "Manav": "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "Lavanya":" https://images.unsplash.com/photo-1595967444215-4901e8436909?q=80&w=1933&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "Archana": "https://images.unsplash.com/photo-1539664030485-a936c7d29c6e?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        };
+        function checkName() {
+            userName = document.getElementById("name").value.trim();
+            if (correctNames.includes(userName)) {
+                document.getElementById("step1").classList.add("hidden");
+                document.getElementById("step2").classList.remove("hidden");
+            } else {
+                alert("Fraud logo ke liye koi questions nahi!");
+            }
+        }
+
+        function checkGoodDeed() {
+            document.getElementById("step2").classList.add("hidden");
+            document.getElementById("step3").classList.remove("hidden");
+        }
+
+        function nextStep() {
+            document.getElementById("step3").classList.add("hidden");
+            document.getElementById("step4").classList.remove("hidden");
+        }
+
+        function nextStep2() {
+            document.getElementById("step4").classList.add("hidden");
+            document.getElementById("step5").classList.remove("hidden");
+        }
+
+        function showPreAnimalMessage() {
+            document.getElementById("step5").classList.add("hidden");
+            document.getElementById("pre_animal_message").classList.remove("hidden");
+            setTimeout(showAnimalFace, 3000);
+        }
+
+        function showAnimalFace() {
+            document.getElementById("pre_animal_message").classList.add("hidden");
+            document.getElementById("step6").classList.remove("hidden");
+            let animal = animalImages[userName] || "https://source.unsplash.com/400x400/?animal";
+            document.getElementById("animal_face").innerHTML = `<img src="${animal}" alt="Animal Face">`;
+        }
+
+        function finish() {
+            document.getElementById("step6").classList.add("hidden");
+            document.getElementById("final_message").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
